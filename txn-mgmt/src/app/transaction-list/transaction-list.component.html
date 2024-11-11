@@ -1,0 +1,143 @@
+<div>
+  <h2 class="centered-header">Save Transaction</h2>
+  <form (ngSubmit)="saveTransaction()" #transactionForm="ngForm">
+    <mat-form-field appearance="fill">
+      <mat-label>Amount</mat-label>
+      <input
+        matInput
+        name="amount"
+        [(ngModel)]="newTransaction.amount"
+        required
+      />
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Transaction Type</mat-label>
+      <mat-select
+        name="transactionType"
+        [(ngModel)]="newTransaction.transactionType"
+        required
+      >
+        <mat-option *ngFor="let type of transactionTypes" [value]="type">{{
+          type
+        }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Status</mat-label>
+      <mat-select name="status" [(ngModel)]="newTransaction.status" required>
+        <mat-option
+          *ngFor="let status of transactionStatuses"
+          [value]="status"
+          >{{ status }}</mat-option
+        >
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Currency</mat-label>
+      <mat-select
+        name="currency"
+        [(ngModel)]="newTransaction.currency"
+        required
+      >
+        <mat-option
+          *ngFor="let currency of transactionCurrencies"
+          [value]="currency"
+          >{{ currency }}</mat-option
+        >
+      </mat-select>
+    </mat-form-field>
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="!transactionForm.valid"
+    >
+      Save Transaction
+    </button>
+  </form>
+  <div>
+    <h2 class="centered-header">Search Transaction Details By Id</h2>
+    <div class="search-box">
+      <mat-form-field appearance="fill">
+        <mat-label>Search by Transaction ID</mat-label>
+        <input matInput [(ngModel)]="searchId" type="number" />
+      </mat-form-field>
+      <button
+        mat-raised-button
+        color="accent"
+        (click)="searchTransactionById()"
+      >
+        Search
+      </button>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="header-container">
+    <h2 class="centered-header">Display All Transaction Details</h2>
+    <button
+      mat-raised-button
+      color="primary"
+      class="show-all-button"
+      (click)="loadTransactions()"
+    >
+      Show All Transactions
+    </button>
+  </div>
+  <div class="table-container">
+    <mat-table [dataSource]="dataSource" matSort class="full-width-table">
+      <ng-container matColumnDef="id">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell>
+        <mat-cell *matCellDef="let transaction">{{ transaction.id }}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="amount">
+        <mat-header-cell *matHeaderCellDef mat-sort-header
+          >Amount</mat-header-cell
+        >
+        <mat-cell *matCellDef="let transaction">{{
+          transaction.amount | currency: transaction.currency
+        }}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="timestamp">
+        <mat-header-cell *matHeaderCellDef mat-sort-header
+          >Timestamp</mat-header-cell
+        >
+        <mat-cell *matCellDef="let transaction">{{
+          transaction.timestamp | date: "short"
+        }}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="transactionType">
+        <mat-header-cell *matHeaderCellDef mat-sort-header
+          >Type</mat-header-cell
+        >
+        <mat-cell *matCellDef="let transaction">{{
+          transaction.transactionType
+        }}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="status">
+        <mat-header-cell *matHeaderCellDef mat-sort-header
+          >Status</mat-header-cell
+        >
+        <mat-cell *matCellDef="let transaction">{{
+          transaction.status
+        }}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="currency">
+        <mat-header-cell *matHeaderCellDef mat-sort-header
+          >Currency</mat-header-cell
+        >
+        <mat-cell *matCellDef="let transaction">{{
+          transaction.currency
+        }}</mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+    </mat-table>
+
+    <mat-paginator
+      [pageSizeOptions]="[5, 10, 20]"
+      showFirstLastButtons
+    ></mat-paginator>
+  </div>
+</div>
